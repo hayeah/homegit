@@ -1,3 +1,4 @@
 #!/bin/bash
 
-rsync -iPa ./ ~
+# assume current dir is the homegit dir.
+rsync -iPa ./home ~
