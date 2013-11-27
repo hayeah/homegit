@@ -1,7 +1,16 @@
 #!/bin/bash
 # Assume ssh login to remote host, and installs personal config via git.
-HOST=
-HOMEGIT="https://github.com/hayeah/homegit.git"
+
+if [ "$1" = "-h" ]; then
+  echo "$0" HOME GIT
+  exit 0
+fi
+
+HOST=$1
+HOMEGIT=$2
+
+test -z "$HOST" && echo please specify the HOST && exit 99
+test -z "$HOMEGIT" &&  echo please specify where the HOMEGIT is && exit 99
 
 ssh $HOST <<-HERE
 test ! -d  ~/homegit && git clone $HOMEGIT ~/homegit
