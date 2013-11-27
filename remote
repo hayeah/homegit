@@ -1,0 +1,9 @@
+#!/bin/bash
+# Assume ssh login to remote host, and installs personal config via git.
+HOST=
+HOMEGIT="https://github.com/hayeah/homegit.git"
+
+ssh $HOST <<-HERE
+test ! -d  ~/homegit && git clone $HOMEGIT ~/homegit
+cd ~/homegit && git pull && ./deploy
+HERE
