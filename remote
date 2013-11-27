@@ -6,13 +6,12 @@ if [ "$1" = "-h" ]; then
   exit 0
 fi
 
-HOST=$1
+HOST=${1:?need to specify the SSH login to configure}
 HOMEGIT=$2
-
-test -z "$HOST" && echo please specify the HOST && exit 99
-test -z "$HOMEGIT" &&  echo please specify where the HOMEGIT is && exit 99
+HOMEGIT=${HOMEGIT:="https://github.com/hayeah/homegit.git"}
 
 ssh $HOST <<-HERE
+echo $HOMEGIT
 test ! -d  ~/homegit && git clone $HOMEGIT ~/homegit
-cd ~/homegit && git pull && ./deploy
+cd ~/homegit && git pull -f && ./deploy
 HERE
