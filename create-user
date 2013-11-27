@@ -1,0 +1,30 @@
+#!/bin/bash
+# + create passwordless user
+# + make user a sudoer
+# + add user to rvm group
+# + provide public ssh access to user
+
+if [ "$1" = "-h" ]; then
+  echo "$0" SSHROOT USER
+  exit 0
+fi
+
+ROOT=$1
+USER=$2
+
+test -z "$ROOT" && echo please set the ssh ROOT && exit 99
+test -z "$USER" && echo please set the USER to create && exit 99
+
+ssh $ROOT <<-HERE
+if ! id -u $USER; then
+  sudo adduser $USER --shell /bin/bash --gecos "" --disabled-password
+fi
+# adding group is indempotent
+sudo usermod $USER -a -G sudo
+sudo usermod $USER -a -G rvm
+
+su -l $USER -c "mkdir -p ~/.ssh"
+HERE
+
+# copy public key to remote user
+scp ~/.ssh/id_rsa.pub "$ROOT:/home/$USER/.ssh/authorized_keys"
